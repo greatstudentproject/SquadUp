@@ -63,6 +63,7 @@ const Profile = () => {
   const fetchProfileData = async (userId) => {
     try {
       setLoading(true);
+      const userMetadata = isOwner ? user?.user_metadata || {} : {};
       
       const { data: profileData, error: profileError } = await supabase
         .from('profiles')
@@ -86,10 +87,19 @@ const Profile = () => {
 
         setProfile({
           ...profileData,
+          full_name: profileData.full_name || userMetadata.full_name || userMetadata.name || '',
+          username: profileData.username || userMetadata.username || '',
           skills: mappedSkills,
           // Upewniamy się, że kategorie to tablica (może przyjść null z bazy)
           preferred_categories: profileData.preferred_categories || [] 
         });
+      } else if (isOwner) {
+        setProfile((currentProfile) => ({
+          ...currentProfile,
+          full_name: userMetadata.full_name || userMetadata.name || '',
+          username: userMetadata.username || '',
+          email: user?.email || '',
+        }));
       }
 
       const { data: statsData } = await supabase.rpc('get_user_stats', { target_user_id: userId });

@@ -37,7 +37,12 @@ const ProfileBasicInfo = ({ profile, setProfile, isEditing }) => {
                 onChange={e => setProfile({...profile, full_name: e.target.value})} 
                 className="w-full bg-background border border-border rounded-lg px-3 py-2 text-textMain focus:border-primary focus:outline-none transition-colors" 
               />
-            ) : (<h2 className="text-2xl font-bold text-textMain">{profile.full_name || 'Anonymous User'}</h2>)}
+            ) : (
+              <>
+                <h2 className="text-2xl font-bold text-textMain">{profile.full_name || 'Anonymous User'}</h2>
+                {profile.username && <p className="text-sm text-textMuted mt-1">@{profile.username}</p>}
+              </>
+            )}
           </div>
           <div>
             <label className="text-xs text-textMuted uppercase font-bold block mb-1">University</label>

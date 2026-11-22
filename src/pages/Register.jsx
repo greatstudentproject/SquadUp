@@ -55,10 +55,12 @@ const Register = () => {
   const onSubmit = async (data) => {
     try {
       // Sprawdzenie unikalności username
-      const { count: usernameCount } = await supabase
+      const { count: usernameCount, error: usernameError } = await supabase
         .from('profiles')
         .select('*', { count: 'exact', head: true })
         .eq('username', data.username);
+
+      if (usernameError) throw usernameError;
 
       if (usernameCount > 0) {
         toast.error("Username already taken");
@@ -74,6 +76,7 @@ const Register = () => {
           emailRedirectTo: window.location.origin, 
           data: {
             full_name: data.fullName,
+            name: data.fullName,
             username: data.username,
           }
         }

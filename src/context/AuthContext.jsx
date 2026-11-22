@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '../supabaseClient';
+import { ensureUserProfile } from '../services/profileService';
 
 const AuthContext = createContext({});
 
@@ -55,6 +56,14 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const syncUserProfile = async (currentUser) => {
+    try {
+      await ensureUserProfile(currentUser);
+    } catch (error) {
+      console.error('Failed to initialize user profile:', error);
+    }
+  };
+
   useEffect(() => {
     let mounted = true;
 
@@ -67,6 +76,7 @@ export const AuthProvider = ({ children }) => {
           setUser(currentUser);
           
           if (currentUser) {
+            await syncUserProfile(currentUser);
             await checkUserRole(currentUser);
           }
         }
@@ -85,6 +95,7 @@ export const AuthProvider = ({ children }) => {
         setUser(currentUser);
         
         if (currentUser) {
+          await syncUserProfile(currentUser);
           // Nie ustawiamy loadera na true przy zmianie sesji, żeby nie migać interfejsem
           await checkUserRole(currentUser);
         } else {
