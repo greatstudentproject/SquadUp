@@ -56,7 +56,7 @@ const PrivacyPolicy = () => {
         <section>
           <h2 className="text-xl font-bold text-textMain mb-3">5. Contact Details</h2>
           <p>
-            If you have any questions about this privacy policy or our privacy practices, please contact us at: <a href="mailto:olagolek1@gmail.com" className="text-primary hover:underline">olagolek1@gmail.com</a>
+            If you have any questions about this privacy policy or our privacy practices, please contact us at: <a href="mailto:greatstudentproject@gmail.com" className="text-primary hover:underline">greatstudentproject@gmail.com</a>
           </p>
         </section>
       </div>

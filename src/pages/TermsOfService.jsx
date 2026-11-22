@@ -23,7 +23,7 @@ const TermsOfService = () => {
           <div className="bg-primary/10 border border-primary/20 p-4 rounded-xl flex items-start gap-3">
             <AlertCircle className="text-primary shrink-0 mt-0.5" size={20} />
             <p className="text-sm">
-              Please note that Squad Up is an <strong>Engineering Thesis project</strong>. The service is provided "as is" and is intended for educational and demonstration purposes. We do not guarantee continuous availability or data persistence.
+              Please note that Squad Up is an <strong> educational project</strong>. The service is provided "as is" and is intended for educational and demonstration purposes. We do not guarantee continuous availability or data persistence.
             </p>
           </div>
         </section>

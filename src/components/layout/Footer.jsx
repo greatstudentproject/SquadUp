@@ -48,9 +48,9 @@ const Footer = () => {
             <h4 className="text-textMain font-bold mb-4">Contact & Info</h4>
             <ul className="space-y-3 text-sm text-textMuted">
               <li>
-                <a href="mailto:olagolek1@gmail.com" className="flex items-center gap-2 hover:text-primary transition-colors">
+                <a href="mailto:greatstudentproject@gmail.com" className="flex items-center gap-2 hover:text-primary transition-colors">
                   <Mail size={16} />
-                  olagolek1@gmail.com
+                  greatstudentproject@gmail.com
                 </a>
               </li>
               <li>
@@ -77,9 +77,6 @@ const Footer = () => {
         <div className="border-t border-border pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-textMuted">
           <p>
             &copy; {currentYear} <span className="text-textMain font-medium">Styliana</span>. All rights reserved.
-          </p>
-          <p className="flex items-center gap-1 mt-2 md:mt-0">
-            Made with <Heart size={12} className="text-red-500 fill-red-500" /> for Engineering Thesis
           </p>
         </div>
 
