@@ -28,7 +28,7 @@ const CreateProject = () => {
         status_id: PROJECT_STATUS.OPEN,
       };
 
-      const { data: newProject, error: projectError } = await projectService.create(projectData);
+      const { data: newProject, error: projectError } = await projectService.create(projectData, user);
       if (projectError) throw projectError;
 
       if (data.skills && data.skills.length > 0) {
@@ -36,7 +36,8 @@ const CreateProject = () => {
           project_id: newProject.id,
           skill_id: skillObj.id,
         }));
-        await projectService.addSkills(skillsToInsert);
+        const { error: skillsError } = await projectService.addSkills(skillsToInsert);
+        if (skillsError) throw skillsError;
       }
 
       toast.success('Project created successfully! 🎉');

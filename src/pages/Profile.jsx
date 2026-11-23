@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { supabase } from '../supabaseClient';
 import { categoryService } from '../services/categoryService';
+import { ensureUserProfile } from '../services/profileService';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'sonner';
 import useThrowAsyncError from '../hooks/useThrowAsyncError';
@@ -129,9 +130,10 @@ const Profile = () => {
 
     try {
       setIsSaving(true);
+      await ensureUserProfile(user);
       
       // 1. Aktualizacja danych profilu (Teksty + Kategorie)
-      const { error } = await supabase.from('profiles').update({
+      const { data: updatedProfile, error } = await supabase.from('profiles').update({
           full_name: profile.full_name,
           university: profile.university,
           bio: profile.bio,
@@ -140,13 +142,18 @@ const Profile = () => {
           preferred_categories: profile.preferred_categories, // To jest tablica ID, baza to przyjmie
           avatar_url: profile.avatar_url,
           updated_at: new Date(),
-        }).eq('id', user.id);
+        }).eq('id', user.id).select('id').maybeSingle();
 
       if (error) throw error;
+      if (!updatedProfile) throw new Error('Profile was not updated. Check profile access policies.');
 
       // 2. Aktualizacja Skilli (NAPRAWIONA)
       // Najpierw usuwamy stare powiązania
-      await supabase.from('profile_skills').delete().eq('profile_id', user.id);
+      const { error: skillsDeleteError } = await supabase
+        .from('profile_skills')
+        .delete()
+        .eq('profile_id', user.id);
+      if (skillsDeleteError) throw skillsDeleteError;
 
       // Jeśli są wybrane skille, dodajemy je na nowo
       if (profile.skills && profile.skills.length > 0) {
@@ -171,7 +178,9 @@ const Profile = () => {
       fetchProfileData(targetUserId);
     } catch (error) {
       console.error(error);
-      toast.error('Failed to update profile.');
+      toast.error('Failed to update profile.', {
+        description: error.message || 'An unexpected database error occurred.',
+      });
     } finally {
       setIsSaving(false);
     }

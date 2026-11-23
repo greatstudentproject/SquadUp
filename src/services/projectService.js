@@ -1,4 +1,5 @@
 import { supabase } from '../supabaseClient';
+import { ensureUserProfile } from './profileService';
 import { APPLICATION_STATUS } from '../utils/constants'; // <--- Importujemy nasze stałe!
 
 export const projectService = {
@@ -44,7 +45,8 @@ export const projectService = {
   // ... (metody create, update, delete, addSkills, updateSkills, getByAuthor - zostaw bez zmian) ...
   // Upewnij się tylko, że nie skasujesz ich przy wklejaniu! :)
 
-  create: async (projectData) => {
+  create: async (projectData, user) => {
+    await ensureUserProfile(user);
     return await supabase.from('projects').insert([projectData]).select().single();
   },
 
