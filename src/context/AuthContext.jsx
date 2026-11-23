@@ -89,15 +89,18 @@ export const AuthProvider = ({ children }) => {
 
     initAuth();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (mounted) {
         const currentUser = session?.user ?? null;
         setUser(currentUser);
         
         if (currentUser) {
-          await syncUserProfile(currentUser);
-          // Nie ustawiamy loadera na true przy zmianie sesji, żeby nie migać interfejsem
-          await checkUserRole(currentUser);
+          // Auth callbacks run under Supabase's auth lock; defer database requests until it returns.
+          setTimeout(async () => {
+            if (!mounted) return;
+            await syncUserProfile(currentUser);
+            if (mounted) await checkUserRole(currentUser);
+          }, 0);
         } else {
           setIsAdmin(false);
         }
